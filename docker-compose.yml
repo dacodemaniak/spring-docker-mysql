@@ -1,0 +1,27 @@
+version: '3'
+services: 
+  mysql_server:
+    image: mysql:8
+    container_name: mysql_db
+    restart: unless-stopped
+    env_file: .env
+    environment: 
+      - MYSQL_DATABASE=trocit_repo
+    ports: 
+      - 3306:3306
+    volumes: 
+      - ./db:/var/lib/mysql
+    command: '--default-authentication-plugin=mysql_native_password'
+    networks:
+      - troc-mysql
+
+  troc-it-app:
+    image: trocit-app
+    ports:
+      - "80:80"
+    networks:
+      - troc-mysql
+    depends_on:
+      - mysql_server
+networks: 
+  troc-mysql: 
